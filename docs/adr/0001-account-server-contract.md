@@ -4,7 +4,7 @@
 
 ## 배경
 
-Keycloak 이 하던 일(앱 간 SSO, 회사·워크스페이스 소속)을 외부 시스템 없이 자체 서버로 옮긴다.
+Keycloak 이 하던 일(앱 간 SSO, 워크스페이스 소속)을 외부 시스템 없이 자체 서버로 옮긴다.
 각 앱은 지금 앱 안에 Better Auth 를 두고 FastAPI 가 JWKS 로 JWT 를 검증한다(Calendar ADR-0023).
 그 구조를 유지한 채 **로그인 제공자만 이 계정 서버(OIDC)로 바꾸고**, 소속의 원천을 계정 서버로 모은다.
 
@@ -111,16 +111,16 @@ POST /api/auth/oauth2/token   (application/x-www-form-urlencoded)
 `email`·`email_verified` 는 `email` scope, `name`·`picture` 는 `profile` scope 일 때만 들어간다.
 `picture` 는 IdP(Google/GitHub) 이미지 URL 또는 `null`.
 
-### 6. 워크스페이스 (구 "회사")
+### 6. 워크스페이스
 
 - `workspaces` 클레임 = 토큰 발급 시점의 사용자 소속 전체. 항목: `id`, `name`, `slug`, `role ∈ owner|admin|member`.
-- **워크스페이스 ID** = Better Auth organization ID (무작위 32자 영숫자, 바뀌지 않음). 앱의 `companies.id`(String(128))에 그대로 쓴다.
+- **워크스페이스 ID** = Better Auth organization ID (무작위 32자 영숫자, 바뀌지 않음). 앱의 `workspaces.id`(String(128))에 그대로 쓴다.
   개인 워크스페이스의 slug 는 `personal-{sub}` 이고 `metadata.personal = true` (삭제 불가).
 - 가입 시 개인 워크스페이스 "`{이름}`의 워크스페이스" 를 자동으로 만들고 owner 로 넣는다 (멱등). 그러므로 `workspaces` 는 항상 1개 이상.
-- 앱의 활성 회사 헤더(`X-Active-Company-Id`)는 **토큰의 `workspaces[].id` 중 하나여야** 한다. 아니면 403.
+- 앱의 활성 워크스페이스 헤더(`X-Active-Workspace-Id`)는 **토큰의 `workspaces[].id` 중 하나여야** 한다. 아니면 403.
 - 역할 매핑 (앱의 `admin | member` 모델): `owner`·`admin` → 앱 `admin`, `member` → 앱 `member`.
 - 앱은 소속을 **캐시로만** 저장한다 (원천은 계정 서버). 토큰을 받을 때마다 `workspaces` 로 로컬 멤버십을 동기화(upsert + 빠진 것 삭제)한다.
-  앱 쪽 "회사 멤버 추가/제거" UI 는 없애고 계정 서버 링크(`${ACCOUNT_URL}/workspaces/{id}`)로 보낸다.
+  앱 쪽 "멤버 추가/제거" UI 는 없애고 계정 서버 링크(`${ACCOUNT_URL}/workspaces/{id}`)로 보낸다.
 
 **변경 전파:** 멤버 추가·제거·역할 변경·이름 변경은 **다음 토큰 갱신 때** 반영된다: 최대 액세스 토큰 수명(15분).
 즉시 반영이 필요한 판단(예: 멤버 제거 직후 접근 차단)은 `GET /api/v1/workspaces` 로 최신 값을 조회한다.
