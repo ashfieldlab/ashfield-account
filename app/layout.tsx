@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import localFont from "next/font/local"
 
+import { ThemeProvider } from "@/components/providers/theme-provider"
 import { ConfirmProvider } from "@/components/ui-custom/use-confirm"
 import { Toaster } from "@/components/ui/sonner"
 
@@ -31,22 +32,18 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#252525" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
   ],
 }
-
-// 시스템 다크 모드면 첫 페인트 전에 .dark 를 붙인다 (theme.css 의 다크 토큰).
-const themeScript = `(()=>{try{const m=matchMedia('(prefers-color-scheme: dark)');const a=()=>document.documentElement.classList.toggle('dark',m.matches);a();m.addEventListener('change',a)}catch(e){}})()`
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko" className={`${pretendard.variable} h-full antialiased`} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className="min-h-full font-sans">
-        <ConfirmProvider>{children}</ConfirmProvider>
-        <Toaster theme="system" />
+        <ThemeProvider>
+          <ConfirmProvider>{children}</ConfirmProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )

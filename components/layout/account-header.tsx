@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ThemeSubmenu } from "@/components/ui-custom/theme-menu"
 import { authClient } from "@/lib/auth/client"
 import { cn } from "@/lib/utils"
 
@@ -70,6 +71,8 @@ export function AccountHeader({ user }: { user: { name: string; email: string; i
                 <div className="truncate text-sm font-medium text-foreground">{user.name}</div>
                 <div className="truncate text-xs text-muted-foreground">{user.email}</div>
               </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <ThemeSubmenu />
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onSelect={() => void signOut()} data-testid="user-menu-sign-out">
                 <LogOut />

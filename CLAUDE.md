@@ -19,6 +19,7 @@ Ashfield 앱들의 계정 서버(OIDC 제공자) + 워크스페이스. 앱과의
 - `console.log` 금지 → `lib/utils/logger.ts` (`auth | api | biz | ui`). 스크립트(`scripts/`)는 예외.
 - 모든 interactive 요소에 `data-testid` (`{feature}-{element}[-{action|id}]`): ESLint 가 검사.
 - 토스트 `useToast()`, 확인창 `useConfirm()` (`components/ui-custom/`). 테마 토큰은 `app/theme.css` (Calendar 와 바이트 동일 유지).
+- 테마(시스템·라이트·다크)는 next-themes: `components/providers/theme-provider.tsx`(root layout), 전환 UI 는 헤더 사용자 메뉴의 `ThemeSubmenu`(`components/ui-custom/theme-menu.tsx`). 둘 다 Calendar 와 바이트 동일. 색은 토큰으로 (`bg-white`·`text-gray-*` 금지, 상태색은 `dark:` 짝).
 - shadcn 추가: `npx shadcn@latest add <name>` (style `radix-nova`). `components/ui/*` 중 Calendar 에서 온 파일은 Calendar 와 같게 유지.
 - UI 문구는 한국어.
 
