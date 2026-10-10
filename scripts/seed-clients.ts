@@ -1,14 +1,14 @@
 /**
  * 1st-party OAuth 클라이언트 등록 (멱등): `npm run seed:clients` (= make seed).
  *
- *   ashfield-calendar · ashfield-drive : confidential(web), PKCE 필수, 동의 화면 생략
+ *   ashfield-calendar, ashfield-drive : confidential(web), PKCE 필수, 동의 화면 생략
  *   ashfield-sync                      : public(native), PKCE 필수, loopback redirect
  *
- * 다시 실행하면 redirect URI·이름 등을 .env 값으로 갱신하고 secret 은 유지한다.
+ * 다시 실행하면 redirect URI, 이름 등을 .env 값으로 갱신하고 secret 은 유지한다.
  * confidential secret 은 처음 만들 때(또는 --rotate) 한 번만 평문으로 알 수 있으므로
  * 콘솔에 출력하고 .secrets/clients.local.json (gitignore) 에 저장한다.
  *
- *   npm run seed:clients               # 생성·갱신
+ *   npm run seed:clients               # 생성과 갱신
  *   npm run seed:clients -- --rotate   # confidential secret 재발급
  */
 import "dotenv/config"

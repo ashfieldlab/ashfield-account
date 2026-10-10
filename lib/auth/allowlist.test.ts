@@ -10,14 +10,14 @@ describe("ALLOWED_EMAILS", () => {
     expect(isEmailAllowed(undefined, parseEmailList(undefined))).toBe(true)
   })
 
-  it("쉼표 구분·공백·대소문자 무시", () => {
+  it("쉼표 구분, 공백과 대소문자 무시", () => {
     const list = parseEmailList(" Alice@Example.com , bob@example.com,, ")
     expect([...list]).toEqual(["alice@example.com", "bob@example.com"])
     expect(isEmailAllowed("ALICE@example.COM", list)).toBe(true)
     expect(isEmailAllowed(" bob@example.com ", list)).toBe(true)
   })
 
-  it("목록이 있으면 그 밖의 이메일·빈 이메일은 거부", () => {
+  it("목록이 있으면 그 밖의 이메일과 빈 이메일은 거부", () => {
     const list = parseEmailList("alice@example.com")
     expect(isEmailAllowed("mallory@example.com", list)).toBe(false)
     expect(isEmailAllowed("", list)).toBe(false)

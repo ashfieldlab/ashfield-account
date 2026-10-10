@@ -15,8 +15,8 @@ const pretendard = localFont({
 })
 
 export const metadata: Metadata = {
-  title: { default: "Ashfield 계정", template: "%s · Ashfield 계정" },
-  description: "Ashfield 앱(일정·드라이브·동기화)의 통합 로그인과 워크스페이스.",
+  title: { default: "Ashfield 계정", template: "%s | Ashfield 계정" },
+  description: "Ashfield 앱(일정, 드라이브, 동기화)의 통합 로그인과 워크스페이스.",
   icons: {
     icon: [
       { url: "/icons/ashfield/favicon.ico", sizes: "any" },

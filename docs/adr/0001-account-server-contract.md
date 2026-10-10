@@ -1,6 +1,6 @@
 # 0001. 계정 서버(OIDC 제공자) ↔ Ashfield 앱 계약
 
-상태: 채택 (2026-10). Calendar·Drive·Sync 가 이 문서대로 구현한다. 바꾸려면 이 ADR 을 개정한다.
+상태: 채택 (2026-10). Calendar, Drive, Sync 가 이 문서대로 구현한다. 바꾸려면 이 ADR 을 개정한다.
 
 ## 배경
 
@@ -12,7 +12,7 @@ Keycloak 이 하던 일(앱 간 SSO, 워크스페이스 소속)을 외부 시스
 
 ## 결정
 
-### 1. Issuer · 엔드포인트
+### 1. Issuer와 엔드포인트
 
 | 항목 | 값 (dev 기본 `ACCOUNT_URL=http://localhost:3300`) |
 |---|---|
@@ -22,7 +22,7 @@ Keycloak 이 하던 일(앱 간 SSO, 워크스페이스 소속)을 외부 시스
 | token | `${ACCOUNT_URL}/api/auth/oauth2/token` |
 | userinfo | `${ACCOUNT_URL}/api/auth/oauth2/userinfo` |
 | JWKS | `${ACCOUNT_URL}/api/auth/jwks` (RS256, `kid` 있음) |
-| revoke / introspect | `${ACCOUNT_URL}/api/auth/oauth2/revoke` · `/oauth2/introspect` |
+| revoke / introspect | `${ACCOUNT_URL}/api/auth/oauth2/revoke`, `/oauth2/introspect` |
 | end-session (RP 로그아웃) | `${ACCOUNT_URL}/api/auth/oauth2/end-session` |
 
 앱은 **디스커버리 문서에서 엔드포인트를 읽는다** (하드코딩 금지: 경로가 Keycloak 과 다르다).
@@ -63,7 +63,7 @@ GET /api/auth/oauth2/authorize
 - 응답: `redirect_uri?code=…&state=…&iss=${ACCOUNT_URL}` (RFC 9207: `iss` 를 확인할 것).
 - 오류: `redirect_uri?error=…&error_description=…&state=…` (예: `access_denied`).
 
-### 4. 토큰 요청 · 응답
+### 4. 토큰 요청과 응답
 
 ```
 POST /api/auth/oauth2/token   (application/x-www-form-urlencoded)
@@ -78,7 +78,7 @@ POST /api/auth/oauth2/token   (application/x-www-form-urlencoded)
 
 ### 5. 액세스 토큰 (JWT): 앱 백엔드가 검증할 것
 
-헤더: `{ "alg": "RS256", "typ": "at+jwt", "kid": "…" }` · 수명 `ACCESS_TOKEN_TTL_SECONDS`(기본 900초 = 15분).
+헤더: `{ "alg": "RS256", "typ": "at+jwt", "kid": "…" }`, 수명 `ACCESS_TOKEN_TTL_SECONDS`(기본 900초 = 15분).
 
 ```json
 {
@@ -108,7 +108,7 @@ POST /api/auth/oauth2/token   (application/x-www-form-urlencoded)
 5. `sub` = 사용자 ID (계정 서버의 안정적 문자열 ID). 앱 로컬 `users.id` 로 쓴다.
 6. `azp`/`client_id` 는 정보용. 필요하면 허용 목록(`ashfield-calendar`, `ashfield-drive`, `ashfield-sync`)으로 제한.
 
-`email`·`email_verified` 는 `email` scope, `name`·`picture` 는 `profile` scope 일 때만 들어간다.
+`email`, `email_verified` 는 `email` scope, `name`, `picture` 는 `profile` scope 일 때만 들어간다.
 `picture` 는 IdP(Google/GitHub) 이미지 URL 또는 `null`.
 
 ### 6. 워크스페이스
@@ -118,13 +118,13 @@ POST /api/auth/oauth2/token   (application/x-www-form-urlencoded)
   개인 워크스페이스의 slug 는 `personal-{sub}` 이고 `metadata.personal = true` (삭제 불가).
 - 가입 시 개인 워크스페이스 "`{이름}`의 워크스페이스" 를 자동으로 만들고 owner 로 넣는다 (멱등). 그러므로 `workspaces` 는 항상 1개 이상.
 - 앱의 활성 워크스페이스 헤더(`X-Active-Workspace-Id`)는 **토큰의 `workspaces[].id` 중 하나여야** 한다. 아니면 403.
-- 역할 매핑 (앱의 `admin | member` 모델): `owner`·`admin` → 앱 `admin`, `member` → 앱 `member`.
+- 역할 매핑 (앱의 `admin | member` 모델): `owner`, `admin` → 앱 `admin`, `member` → 앱 `member`.
 - 앱은 소속을 **캐시로만** 저장한다 (원천은 계정 서버). 토큰을 받을 때마다 `workspaces` 로 로컬 멤버십을 동기화(upsert + 빠진 것 삭제)한다.
   앱 쪽 "멤버 추가/제거" UI 는 없애고 계정 서버 링크(`${ACCOUNT_URL}/workspaces/{id}`)로 보낸다.
 
-**변경 전파:** 멤버 추가·제거·역할 변경·이름 변경은 **다음 토큰 갱신 때** 반영된다: 최대 액세스 토큰 수명(15분).
+**변경 전파:** 멤버 추가, 제거, 역할 변경, 이름 변경은 **다음 토큰 갱신 때** 반영된다: 최대 액세스 토큰 수명(15분).
 즉시 반영이 필요한 판단(예: 멤버 제거 직후 접근 차단)은 `GET /api/v1/workspaces` 로 최신 값을 조회한다.
-JWT 액세스 토큰은 폐기할 수 없으므로 앱 연결 해제·기기 로그아웃도 최대 15분 뒤 완전히 반영된다.
+JWT 액세스 토큰은 폐기할 수 없으므로 앱 연결 해제와 기기 로그아웃도 최대 15분 뒤 완전히 반영된다.
 
 ### 7. 리프레시 토큰
 
@@ -132,7 +132,7 @@ JWT 액세스 토큰은 폐기할 수 없으므로 앱 연결 해제·기기 로
 - **회전(rotation)**: 갱신할 때마다 새 refresh_token 이 오고 옛 것은 즉시 무효. 응답의 새 값을 저장할 것.
 - **재사용 감지**: 이미 쓴 refresh_token 이 다시 오면 그 토큰 패밀리 전체를 폐기한다 (탈취 의심). 앱은 400 `invalid_grant` 를 받으면 재로그인시킨다.
   동시 갱신 경쟁을 피하려면 앱 안에서 갱신을 직렬화한다.
-- 사용자는 계정 홈 → "연결된 앱" 에서 기기별 로그아웃·앱 연결 해제를 할 수 있다 (해당 refresh_token 폐기).
+- 사용자는 계정 홈 → "연결된 앱" 에서 기기별 로그아웃과 앱 연결 해제를 할 수 있다 (해당 refresh_token 폐기).
 
 ### 8. ID 토큰
 
@@ -141,17 +141,17 @@ JWT 액세스 토큰은 폐기할 수 없으므로 앱 연결 해제·기기 로
 
 ### 9. 계정 서버 API (`/api/v1/*`, Bearer = 위 액세스 토큰)
 
-`aud` 가 1st-party resource(Calendar·Drive) 중 하나인 토큰이면 된다: 앱 백엔드가 받은 토큰을 그대로 전달.
+`aud` 가 1st-party resource(Calendar, Drive) 중 하나인 토큰이면 된다: 앱 백엔드가 받은 토큰을 그대로 전달.
 응답은 snake_case JSON. 실패: 401 `{error:"invalid_token"|"unauthorized", error_description}` (+ `WWW-Authenticate`), 404 `{error:"not_found"}`.
 
-| 메서드 · 경로 | 응답 |
+| 메서드와 경로 | 응답 |
 |---|---|
 | `GET /api/v1/me` | `{ sub, email, email_verified, name, picture, workspaces: [{id,name,slug,role}] }` (최신값) |
 | `GET /api/v1/workspaces` | `{ workspaces: [{id,name,slug,role}] }` |
 | `GET /api/v1/workspaces/{id}` | `{ id, name, slug, personal, created_at, member_count, my_role }`: 멤버가 아니면 404 |
 | `GET /api/v1/workspaces/{id}/members` | `{ workspace_id, members: [{ sub, email, name, picture, role, joined_at }] }`: 멤버가 아니면 404 |
 
-쓰기 API 는 없다: 워크스페이스·멤버 관리는 계정 서버 UI 에서만.
+쓰기 API 는 없다: 워크스페이스와 멤버 관리는 계정 서버 UI 에서만.
 
 ### 10. 로그아웃
 
@@ -178,12 +178,12 @@ JWT 액세스 토큰은 폐기할 수 없으므로 앱 연결 해제·기기 로
   콜백은 `${APP_URL}/api/auth/callback/ashfield`. BFF 는 계정 서버 **액세스 토큰**(Better Auth `account` 테이블에 저장, 만료 시 refresh)을
   백엔드에 Bearer 로 넘기고, FastAPI 는 `AUTH_JWKS_URL=${ACCOUNT_URL}/api/auth/jwks`, `AUTH_ISSUER=${ACCOUNT_URL}`, `AUTH_AUDIENCE=${APP_URL}` 로 검증한다.
 - **Sync (Tauri)**: `VITE_OAUTH_ISSUER=${ACCOUNT_URL}`, `VITE_OAUTH_CLIENT_ID=ashfield-sync`, 포트 1421 유지.
-  변경점: 엔드포인트를 디스커버리에서 읽기(현재 Keycloak 경로 하드코딩), scope 에 `offline_access`, authorize·token·refresh 에 `resource=${DRIVE_URL}`,
+  변경점: 엔드포인트를 디스커버리에서 읽기(현재 Keycloak 경로 하드코딩), scope 에 `offline_access`, authorize, token, refresh 에 `resource=${DRIVE_URL}`,
   로그아웃은 `end_session_endpoint`. redirect `http://localhost:1421/oauth/callback` 은 이미 등록돼 있다.
 
 ## 대안
 
 - **opaque 액세스 토큰 + introspection**: 즉시 폐기가 되지만 모든 API 요청이 계정 서버를 부른다. 앱 백엔드가 지금처럼 JWKS 로 자체 검증하는 구조를 유지하려고 JWT 를 택했다(대가: 폐기 지연 ≤ 15분).
-- **소속을 토큰에 안 싣고 `/api/v1/workspaces` 만 제공**: 매 요청 네트워크 호출. 클레임 + 조회 API 를 둘 다 두고, 클레임은 캐시·조회는 최신값으로 쓴다.
+- **소속을 토큰에 안 싣고 `/api/v1/workspaces` 만 제공**: 매 요청 네트워크 호출. 클레임 + 조회 API 를 둘 다 두고, 클레임은 캐시, 조회는 최신값으로 쓴다.
 - **앱 하나의 resource 로 통일(공용 aud)**: 한 앱용 토큰이 다른 앱에서도 통한다. 앱별 resource 로 토큰을 격리했다 (Sync 는 Drive resource).
 - **Better Auth organization 초대(이메일 기반)**: 수락자가 초대 이메일과 같아야 하고 메일 발송이 필요하다. 링크 초대는 별도 테이블(`workspaceInvite`)로 구현했다.

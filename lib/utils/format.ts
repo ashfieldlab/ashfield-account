@@ -1,4 +1,4 @@
-/** 날짜 표시: 한국어. 서버·클라이언트 공용 (Asia/Seoul 고정으로 hydration 차이 방지). */
+/** 날짜 표시: 한국어. 서버와 클라이언트 공용 (Asia/Seoul 고정으로 hydration 차이 방지). */
 const dateFmt = new Intl.DateTimeFormat("ko-KR", {
   year: "numeric",
   month: "long",

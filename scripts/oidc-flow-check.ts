@@ -4,12 +4,12 @@
  *   npm run oidc:check        (= make oidc-check; 서버가 ACCOUNT_URL 에 떠 있어야 함,
  *                              AUTH_DEV_PASSWORD_LOGIN=true, seed:clients 완료)
  *
- *  1. 디스커버리 · JWKS
+ *  1. 디스커버리, JWKS
  *  2. /oauth2/authorize (세션 없음) → /sign-in?…&sig=… 로 보내지는지
  *  3. 그 서명된 쿼리를 붙여 DEV 비밀번호 로그인 → 앱 redirect_uri(loopback)로 code 가 오는지
  *    : 127.0.0.1:1421 에 실제 loopback 리스너를 띄워 브라우저처럼 따라가 code 를 받는다
  *  4. code + PKCE verifier + resource → 토큰 (JWT access, id_token, refresh)
- *  5. JWKS 로 서명·iss·aud·exp 검증, `workspaces` 클레임(개인 워크스페이스 owner) 확인
+ *  5. JWKS 로 서명, iss, aud, exp 검증, `workspaces` 클레임(개인 워크스페이스 owner) 확인
  *  6. /oauth2/userinfo, /api/v1/me, /api/v1/workspaces/{id}/members
  *  7. refresh_token 회전: 새 refresh 발급 + 옛 refresh 재사용 거부
  *  8. confidential 클라이언트(ashfield-calendar): 같은 브라우저 세션으로 SSO(로그인 화면 없이 code),
@@ -117,7 +117,7 @@ async function main() {
     .map((c) => c.split(";")[0])
     .join("; ")
   const signUpBody = (await signUp.json()) as { url?: string; redirect?: boolean }
-  check("가입·로그인 200", signUp.ok, signUp.status)
+  check("가입과 로그인 200", signUp.ok, signUp.status)
   check("응답에 앱으로 갈 url", typeof signUpBody.url === "string", signUpBody)
   const cbUrl = new URL(signUpBody.url ?? "http://invalid")
   check("redirect_uri 로 향함", `${cbUrl.origin}${cbUrl.pathname}` === REDIRECT_URI, cbUrl.toString())
@@ -174,10 +174,10 @@ async function main() {
   check("개인 워크스페이스 owner", personal?.role === "owner" && personal.name === "OIDC 점검의 워크스페이스", personal)
 
   const { payload: idt } = await jwtVerify(tokens.id_token as string, jwks, { issuer: ISSUER, audience: CLIENT_ID })
-  check("id_token aud = client_id · nonce", idt.aud === CLIENT_ID && idt.nonce === nonce, { aud: idt.aud, nonce: idt.nonce })
+  check("id_token aud = client_id, nonce", idt.aud === CLIENT_ID && idt.nonce === nonce, { aud: idt.aud, nonce: idt.nonce })
   check("id_token sub = access sub", idt.sub === at.sub)
 
-  step("6. userinfo · /api/v1")
+  step("6. userinfo, /api/v1")
   const auth = { authorization: `Bearer ${tokens.access_token}` }
   const ui = await fetch(disco.userinfo_endpoint, { headers: auth })
   const uiBody = await ui.json()
@@ -242,7 +242,7 @@ async function main() {
     const ar = await fetch(u, { redirect: "manual", headers: { cookie: sessionCookie, accept: "text/html" } })
     const loc = ar.headers.get("location") ?? ((await ar.json().catch(() => ({}))) as { url?: string }).url ?? ""
     const cal = new URL(loc, ISSUER)
-    check("이미 로그인 → 로그인·동의 화면 없이 redirect_uri 로", `${cal.origin}${cal.pathname}` === calRedirect, loc)
+    check("이미 로그인 → 로그인과 동의 화면 없이 redirect_uri 로", `${cal.origin}${cal.pathname}` === calRedirect, loc)
     const calCode = cal.searchParams.get("code") ?? ""
     const tr = await fetch(disco.token_endpoint, {
       method: "POST",

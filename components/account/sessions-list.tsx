@@ -88,7 +88,7 @@ export function SessionsList({ sessions, currentSessionId }: { sessions: Session
                   )}
                 </div>
                 <div className="truncate text-xs text-muted-foreground">
-                  {formatIp(s.ipAddress) ? `${formatIp(s.ipAddress)} · ` : ""}
+                  {formatIp(s.ipAddress) ? `${formatIp(s.ipAddress)}, ` : ""}
                   {formatRelative(s.updatedAt)} 활동
                 </div>
               </div>

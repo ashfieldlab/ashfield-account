@@ -21,7 +21,7 @@ import { toActionError, type ActionResult } from "./result"
 
 const MANAGER_ROLES = new Set(["owner", "admin"])
 
-/** 영문·숫자만 남긴 slug + 무작위 접미사 (한글 이름도 충돌 없이). */
+/** 영문과 숫자만 남긴 slug + 무작위 접미사 (한글 이름도 충돌 없이). */
 function makeSlug(name: string): string {
   const base = name
     .toLowerCase()

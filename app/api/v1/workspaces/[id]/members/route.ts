@@ -3,7 +3,7 @@ import { getWorkspaceForMember, listWorkspaceMembers } from "@/lib/db/workspaces
 
 export const dynamic = "force-dynamic"
 
-/** GET /api/v1/workspaces/{id}/members: 멤버만. 앱의 멤버 선택·자동완성용. */
+/** GET /api/v1/workspaces/{id}/members: 멤버만. 앱의 멤버 선택, 자동완성용. */
 export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const auth = await verifyBearer(req)
   if (!auth.ok) return auth.response

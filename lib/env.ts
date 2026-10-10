@@ -4,7 +4,7 @@
  * 모든 값은 서버 전용이다 (NEXT_PUBLIC_* 없음). 클라이언트 컴포넌트는 서버 컴포넌트가 props 로
  * 넘긴 값만 쓴다. 키 설명은 `.env.example` 참조.
  *
- * Better Auth CLI(`auth migrate`)와 seed 스크립트(tsx)도 이 파일을 import 하므로 경로 별칭(@/)·
+ * Better Auth CLI(`auth migrate`)와 seed 스크립트(tsx)도 이 파일을 import 하므로 경로 별칭(@/)과
  * "server-only" 를 쓰지 않는다.
  */
 
@@ -12,7 +12,7 @@ function trimSlash(v: string): string {
   return v.replace(/\/+$/, "")
 }
 
-/** 쉼표 구분 목록 → 공백 제거·빈 값 제거. */
+/** 쉼표 구분 목록 → 공백 제거, 빈 값 제거. */
 export function parseList(raw: string | undefined | null): string[] {
   return (raw ?? "")
     .split(",")
@@ -69,7 +69,7 @@ export const env = {
   get allowedEmails(): string {
     return process.env.ALLOWED_EMAILS || ""
   },
-  /** 로컬·E2E 전용 이메일+비밀번호 로그인 요청 여부. 운영에선 무시된다 (lib/auth/server.ts). */
+  /** 로컬, E2E 전용 이메일+비밀번호 로그인 요청 여부. 운영에선 무시된다 (lib/auth/server.ts). */
   get devPasswordLoginRequested(): boolean {
     return process.env.AUTH_DEV_PASSWORD_LOGIN === "true"
   },
@@ -84,7 +84,7 @@ export const env = {
     return Number(process.env.REFRESH_TOKEN_TTL_SECONDS || 60 * 60 * 24 * 30)
   },
 
-  // ---- 1st-party 앱 (seed:clients · 리소스(aud)) ----
+  // ---- 1st-party 앱 (seed:clients, 리소스(aud)) ----
   /** 일정 앱 공개 주소. 액세스 토큰 `aud`(resource) 로도 쓰인다. */
   get calendarURL(): string {
     return trimSlash(process.env.CALENDAR_URL || "http://localhost:3100")

@@ -111,7 +111,7 @@ export function ConnectedApps({ apps }: { apps: ConnectedApp[] }) {
                       data-testid={`connected-app-grant-${g.id}`}
                     >
                       <span className="text-muted-foreground">
-                        {formatRelative(g.createdAt)} 마지막 갱신 · {g.scopes.includes("offline_access") ? "로그인 유지" : "세션"}
+                        {formatRelative(g.createdAt)} 마지막 갱신, {g.scopes.includes("offline_access") ? "로그인 유지" : "세션"}
                       </span>
                       <Button
                         variant="ghost"

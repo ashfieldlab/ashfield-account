@@ -51,7 +51,7 @@ export default async function WorkspaceDetailPage({ params }: { params: Promise<
                 개인
               </Badge>
             )}
-            <span>· 멤버 {workspace.member_count}명</span>
+            <span>멤버 {workspace.member_count}명</span>
           </span>
         }
       />

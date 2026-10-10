@@ -20,7 +20,7 @@ export interface ConnectedApp {
   uri: string | null
   icon: string | null
   firstParty: boolean
-  /** 활성 리프레시 토큰 = 로그인돼 있는 기기·세션 */
+  /** 활성 리프레시 토큰 = 로그인돼 있는 기기, 세션 */
   grants: AppGrant[]
   consentedAt: string | null
 }
@@ -36,7 +36,7 @@ function parseJson<T>(v: unknown, fallback: T): T {
 }
 
 /**
- * 활성 리프레시 토큰(회전·폐기·만료 안 된 것)이나 동의 기록이 있는 클라이언트.
+ * 활성 리프레시 토큰(회전, 폐기, 만료 안 된 것)이나 동의 기록이 있는 클라이언트.
  * 1st-party 앱은 동의를 건너뛰므로 리프레시 토큰으로만 나타난다.
  */
 export async function listConnectedApps(userId: string): Promise<ConnectedApp[]> {

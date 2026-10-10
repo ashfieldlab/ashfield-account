@@ -3,11 +3,11 @@
  * (수락 시 이메일 일치 검사) 링크 초대를 위해 별도 모델을 둔다.
  *
  * 엔드포인트 없이 스키마만 선언하는 플러그인 → `npm run migrate`(Better Auth CLI)가 테이블을
- * 같이 만든다. 읽기·쓰기는 lib/workspaces/invites.ts.
+ * 같이 만든다. 읽기와 쓰기는 lib/workspaces/invites.ts.
  *
  *   id            = 링크 토큰 (Better Auth 기본 id: 무작위 32자) → `/invite/{id}`
  *   role          = 수락자에게 줄 역할 (admin | member)
- *   expiresAt     = 만료 시각. 만료·삭제(취소) 전까지 여러 명이 쓸 수 있다.
+ *   expiresAt     = 만료 시각. 만료, 삭제(취소) 전까지 여러 명이 쓸 수 있다.
  */
 import type { BetterAuthPlugin } from "better-auth"
 

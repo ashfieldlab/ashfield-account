@@ -1,5 +1,5 @@
 /**
- * 서버 컴포넌트·server action 용 세션 헬퍼.
+ * 서버 컴포넌트와 server action 용 세션 헬퍼.
  */
 import "server-only"
 

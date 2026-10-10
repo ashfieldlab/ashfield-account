@@ -97,7 +97,7 @@ export function MembersList({
                   )}
                 </div>
                 <div className="truncate text-xs text-muted-foreground">
-                  {m.email} · {formatDate(m.joined_at)} 참여
+                  {m.email}, {formatDate(m.joined_at)} 참여
                 </div>
               </div>
               {editable ? (

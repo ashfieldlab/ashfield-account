@@ -16,9 +16,9 @@ Ashfield 앱들의 통합 계정 서버
 
 </div>
 
-한 번 로그인하면 Calendar · Drive · Sync 를 모두 쓸 수 있고, 함께 일할 워크스페이스를 여기서 관리합니다.
+한 번 로그인하면 Calendar, Drive, Sync 를 모두 쓸 수 있고, 함께 일할 워크스페이스를 여기서 관리합니다.
 
-- **하나의 계정**: Google · GitHub 로 로그인하고, 모든 Ashfield 앱에 바로 들어갑니다 (SSO)
+- **하나의 계정**: Google, GitHub 로 로그인하고, 모든 Ashfield 앱에 바로 들어갑니다 (SSO)
 - **워크스페이스**: 만들고, 링크로 초대하고, 멤버 역할을 관리합니다
 - **연결 관리**: 로그인된 앱과 기기를 확인하고 언제든 연결을 끊습니다
 - **표준 OpenID Connect**: 앱은 표준 OIDC 클라이언트로 붙습니다
@@ -34,16 +34,16 @@ make dev     # http://localhost:3300
 
 ## 문서
 
-- [Google · GitHub 로그인 설정](docs/setup-oauth.md)
+- [Google, GitHub 로그인 설정](docs/setup-oauth.md)
 - [앱 연결 계약 (OIDC)](docs/adr/0001-account-server-contract.md): 앱이 토큰을 받고 검증하는 방법
 
 ## Ashfield
 
 | | |
 |---|---|
-| [Account](https://github.com/ashfieldlab/ashfield-account) | 계정 · 워크스페이스 |
-| [Calendar](https://github.com/ashfieldlab/ashfield-calendar) | 일정 · 회의실 · 예약 |
-| [Drive](https://github.com/ashfieldlab/ashfield-drive) | 파일 저장 · 공유 |
+| [Account](https://github.com/ashfieldlab/ashfield-account) | 계정, 워크스페이스 |
+| [Calendar](https://github.com/ashfieldlab/ashfield-calendar) | 일정, 회의실, 예약 |
+| [Drive](https://github.com/ashfieldlab/ashfield-drive) | 파일 저장, 공유 |
 | [Sync](https://github.com/ashfieldlab/ashfield-sync) | Drive 데스크톱 동기화 (Windows) |
 
 ## 라이선스

@@ -36,7 +36,7 @@ describe("format", () => {
   it("User-Agent 요약", () => {
     const ua =
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36"
-    expect(describeUserAgent(ua)).toEqual({ label: "Chrome · Windows", kind: "desktop" })
+    expect(describeUserAgent(ua)).toEqual({ label: "Chrome, Windows", kind: "desktop" })
     expect(describeUserAgent(null).kind).toBe("unknown")
   })
 })

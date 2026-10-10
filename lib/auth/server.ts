@@ -2,13 +2,13 @@
  * Better Auth 서버 인스턴스: 계정 서버의 단일 설정 지점.
  *
  *   - 핸들러: app/api/auth/[...all]/route.ts (`/api/auth/*`), 디스커버리: app/.well-known/*.
- *   - 로그인: Google·GitHub (CLIENT_ID/SECRET 둘 다 있을 때만) + DEV 이메일·비밀번호
+ *   - 로그인: Google, GitHub (CLIENT_ID/SECRET 둘 다 있을 때만) + DEV 이메일과 비밀번호
  *     (AUTH_DEV_PASSWORD_LOGIN=true 이고 NODE_ENV≠production 일 때만).
- *   - ALLOWED_EMAILS: 비어 있지 않으면 목록 밖 이메일의 가입·로그인 거부.
+ *   - ALLOWED_EMAILS: 비어 있지 않으면 목록 밖 이메일의 가입과 로그인 거부.
  *   - organization 플러그인 = "워크스페이스" (owner/admin/member). 가입 시 개인 워크스페이스 자동 생성.
  *   - oauthProvider(+jwt) = OIDC 제공자. 계약은 docs/adr/0001-account-server-contract.md.
  *
- * Better Auth CLI(`npm run migrate`)가 이 파일을 직접 읽으므로 "server-only"·경로 별칭(@/)을
+ * Better Auth CLI(`npm run migrate`)가 이 파일을 직접 읽으므로 "server-only"와 경로 별칭(@/)을
  * 쓰지 않는다. 서버 코드에서만 import 할 것.
  */
 
@@ -82,7 +82,7 @@ export const auth = betterAuth({
   account: { accountLinking: { enabled: true, trustedProviders: ["google", "github"] } },
   session: { expiresIn: 60 * 60 * 24 * 30, updateAge: 60 * 60 * 24 },
   user: {
-    // 가입·계정 연결·OAuth 재로그인 시점의 이메일 검사.
+    // 가입, 계정 연결, OAuth 재로그인 시점의 이메일 검사.
     validateUserInfo: ({ user }) => {
       if (!isEmailAllowed(user.email, allowlist)) {
         return { error: "email_not_allowed", errorDescription: "허용되지 않은 이메일입니다." }
@@ -108,7 +108,7 @@ export const auth = betterAuth({
             throw new APIError("FORBIDDEN", { code: "EMAIL_NOT_ALLOWED", message: "허용되지 않은 이메일입니다." })
           }
         },
-        // 기능 도입 전 가입자·이전 실패 복구용 (멱등, slug 조회 1회).
+        // 기능 도입 전 가입자와 이전 실패 복구용 (멱등, slug 조회 1회).
         after: async (session, ctx) => {
           const c = ctx?.context ?? (await auth.$context)
           const user = await c.internalAdapter.findUserById(session.userId)
@@ -119,11 +119,11 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "ashfield-account",
-    // 스키마 검증(누락 시 "npm run migrate" 안내)은 런타임에만: 빌드·마이그레이션 중엔 끈다.
+    // 스키마 검증(누락 시 "npm run migrate" 안내)은 런타임에만: 빌드와 마이그레이션 중엔 끈다.
     database: { validateSchema: !env.isBuildPhase && !env.skipSchemaCheck },
   },
   plugins: [
-    // 액세스·ID 토큰 서명 키 (JWKS: /api/auth/jwks). 앱 백엔드(Python)가 검증하기 쉽게 RS256.
+    // 액세스와 ID 토큰 서명 키 (JWKS: /api/auth/jwks). 앱 백엔드(Python)가 검증하기 쉽게 RS256.
     jwt({
       jwks: { keyPairConfig: { alg: "RS256", modulusLength: 2048 } },
       jwt: { issuer: env.accountURL },
@@ -158,7 +158,7 @@ export const auth = betterAuth({
       allowDynamicClientRegistration: false,
       grantTypes: ["authorization_code", "refresh_token"],
       storeClientSecret: { hash: hashClientSecret, verify: verifyClientSecret },
-      // 앱이 별도 호출 없이 신원·소속을 알도록 액세스 토큰에 싣는다. 소속 변경은 다음 갱신(≤ TTL)에 반영.
+      // 앱이 별도 호출 없이 신원과 소속을 알도록 액세스 토큰에 싣는다. 소속 변경은 다음 갱신(≤ TTL)에 반영.
       customAccessTokenClaims: async ({ user, scopes }) => {
         if (!user) return {}
         return {

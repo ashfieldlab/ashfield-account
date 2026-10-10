@@ -142,7 +142,7 @@ export function SignInForm({ callbackUrl, error, providers, devPasswordLogin, cl
   )
 }
 
-/** 로컬·E2E 전용 (AUTH_DEV_PASSWORD_LOGIN=true, 비운영). 처음 쓰는 이메일이면 가입 후 로그인. */
+/** 로컬, E2E 전용 (AUTH_DEV_PASSWORD_LOGIN=true, 비운영). 처음 쓰는 이메일이면 가입 후 로그인. */
 function DevPasswordLogin({
   callbackUrl,
   pending,
@@ -187,7 +187,7 @@ function DevPasswordLogin({
         </div>
       )}
       <div className="flex items-center gap-2 rounded-md bg-amber-500/10 px-2.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400">
-        DEV: 이메일·비밀번호 로그인
+        DEV: 이메일과 비밀번호 로그인
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="dev-email">이메일</Label>

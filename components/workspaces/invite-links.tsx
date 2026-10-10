@@ -108,9 +108,10 @@ export function InviteLinks({
                 />
                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                   <RoleBadge role={inv.role} />
-                  <span>{formatRemaining(inv.expiresAt)}</span>
-                  <span>· {inv.acceptedCount}명 참여</span>
-                  {inv.inviterName && <span>· {inv.inviterName} 생성</span>}
+                  <span>
+                    {formatRemaining(inv.expiresAt)}, {inv.acceptedCount}명 참여
+                    {inv.inviterName && `, ${inv.inviterName} 생성`}
+                  </span>
                 </div>
               </div>
               <div className="flex shrink-0 gap-1.5">

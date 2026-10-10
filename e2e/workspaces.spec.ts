@@ -57,7 +57,7 @@ test("로그인 → 개인 워크스페이스 → 워크스페이스 생성 → 
   await pageB.getByTestId("invite-accept-button").click()
   await expect(pageB).toHaveURL(new URL(workspaceUrl).pathname)
   await expect(pageB.getByTestId("workspace-title")).toHaveText("E2E 팀 (수정)")
-  // 멤버는 초대 링크·이름 변경 권한 없음
+  // 멤버는 초대 링크와 이름 변경 권한 없음
   await expect(pageB.getByTestId("invite-links")).toHaveCount(0)
   await expect(pageB.getByTestId("workspace-rename-input")).toBeDisabled()
 

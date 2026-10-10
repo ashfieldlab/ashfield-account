@@ -49,7 +49,7 @@ export default async function AccountHomePage() {
         <div className="min-w-0 flex-1">
           <div className="text-[15px] font-semibold tracking-tight">워크스페이스</div>
           <div className="truncate text-sm text-muted-foreground">
-            {workspaces.length}개 소속 · {workspaces.slice(0, 3).map((w) => w.name).join(", ")}
+            {workspaces.length}개 소속: {workspaces.slice(0, 3).map((w) => w.name).join(", ")}
             {workspaces.length > 3 ? " 외" : ""}
           </div>
         </div>

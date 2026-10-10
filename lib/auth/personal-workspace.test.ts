@@ -95,7 +95,7 @@ describe("personal workspace", () => {
     )
   })
 
-  it("metadata 표식 판별 (객체·JSON 문자열)", () => {
+  it("metadata 표식 판별 (객체, JSON 문자열)", () => {
     expect(isPersonalWorkspaceMetadata({ personal: true })).toBe(true)
     expect(isPersonalWorkspaceMetadata('{"personal":true}')).toBe(true)
     expect(isPersonalWorkspaceMetadata('{"personal":"yes"}')).toBe(false)

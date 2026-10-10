@@ -1,7 +1,7 @@
 /**
- * 1st-party OAuth 클라이언트·리소스 정의: `npm run seed:clients` 와 server.ts 가 같이 쓴다.
+ * 1st-party OAuth 클라이언트와 리소스 정의: `npm run seed:clients` 와 server.ts 가 같이 쓴다.
  * 값은 env(.env)에서 온다. 계약: docs/adr/0001-account-server-contract.md.
- * 경로 별칭(@/) 금지 (Better Auth CLI·tsx 가 읽음).
+ * 경로 별칭(@/) 금지 (Better Auth CLI와 tsx 가 읽음).
  */
 import { env } from "../env"
 
