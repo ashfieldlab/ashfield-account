@@ -4,7 +4,7 @@
 
 ## 배경
 
-Keycloak 이 하던 일 — 앱 간 SSO, 회사(워크스페이스) 소속 — 을 외부 시스템 없이 자체 서버로 옮긴다.
+Keycloak 이 하던 일(앱 간 SSO, 회사·워크스페이스 소속)을 외부 시스템 없이 자체 서버로 옮긴다.
 각 앱은 지금 앱 안에 Better Auth 를 두고 FastAPI 가 JWKS 로 JWT 를 검증한다(Calendar ADR-0023).
 그 구조를 유지한 채 **로그인 제공자만 이 계정 서버(OIDC)로 바꾸고**, 소속의 원천을 계정 서버로 모은다.
 
@@ -16,7 +16,7 @@ Keycloak 이 하던 일 — 앱 간 SSO, 회사(워크스페이스) 소속 — �
 
 | 항목 | 값 (dev 기본 `ACCOUNT_URL=http://localhost:3300`) |
 |---|---|
-| issuer (`iss`) | `${ACCOUNT_URL}` — 끝 슬래시 없음 |
+| issuer (`iss`) | `${ACCOUNT_URL}`: 끝 슬래시 없음 |
 | 디스커버리 | `${ACCOUNT_URL}/.well-known/openid-configuration` (RFC 8414: `/.well-known/oauth-authorization-server`) |
 | authorize | `${ACCOUNT_URL}/api/auth/oauth2/authorize` |
 | token | `${ACCOUNT_URL}/api/auth/oauth2/token` |
@@ -25,7 +25,7 @@ Keycloak 이 하던 일 — 앱 간 SSO, 회사(워크스페이스) 소속 — �
 | revoke / introspect | `${ACCOUNT_URL}/api/auth/oauth2/revoke` · `/oauth2/introspect` |
 | end-session (RP 로그아웃) | `${ACCOUNT_URL}/api/auth/oauth2/end-session` |
 
-앱은 **디스커버리 문서에서 엔드포인트를 읽는다** (하드코딩 금지 — 경로가 Keycloak 과 다르다).
+앱은 **디스커버리 문서에서 엔드포인트를 읽는다** (하드코딩 금지: 경로가 Keycloak 과 다르다).
 
 ### 2. 클라이언트 (`npm run seed:clients`, 멱등)
 
@@ -54,13 +54,13 @@ GET /api/auth/oauth2/authorize
   &nonce=<무작위>                    # 권장 (id_token.nonce 로 돌아온다)
   &code_challenge=<S256(verifier)>
   &code_challenge_method=S256
-  &resource=<그 앱의 resource>       # 필수 — 아래 참고
+  &resource=<그 앱의 resource>       # 필수, 아래 참고
 ```
 
-- **`resource` 는 필수다.** 이 값이 있어야 액세스 토큰이 **JWT** 로 나온다 (없으면 introspection 전용 opaque 토큰 — 앱 백엔드가 JWKS 로 검증할 수 없다). 클라이언트에 연결된 resource 만 요청 가능 (`invalid_target`).
+- **`resource` 는 필수다.** 이 값이 있어야 액세스 토큰이 **JWT** 로 나온다 (없으면 introspection 전용 opaque 토큰: 앱 백엔드가 JWKS 로 검증할 수 없다). 클라이언트에 연결된 resource 만 요청 가능 (`invalid_target`).
 - **`offline_access` 가 있어야 refresh_token 이 나온다.**
 - 세션이 없으면 `/sign-in` 으로 갔다가 로그인 직후 원래 요청으로 돌아온다. 이미 로그인돼 있으면 화면 없이 바로 redirect_uri 로 (SSO).
-- 응답: `redirect_uri?code=…&state=…&iss=${ACCOUNT_URL}` (RFC 9207 — `iss` 를 확인할 것).
+- 응답: `redirect_uri?code=…&state=…&iss=${ACCOUNT_URL}` (RFC 9207: `iss` 를 확인할 것).
 - 오류: `redirect_uri?error=…&error_description=…&state=…` (예: `access_denied`).
 
 ### 4. 토큰 요청 · 응답
@@ -76,7 +76,7 @@ POST /api/auth/oauth2/token   (application/x-www-form-urlencoded)
 
 응답: `{ access_token, token_type: "Bearer", expires_in: 900, refresh_token, id_token, scope }`
 
-### 5. 액세스 토큰 (JWT) — 앱 백엔드가 검증할 것
+### 5. 액세스 토큰 (JWT): 앱 백엔드가 검증할 것
 
 헤더: `{ "alg": "RS256", "typ": "at+jwt", "kid": "…" }` · 수명 `ACCESS_TOKEN_TTL_SECONDS`(기본 900초 = 15분).
 
@@ -99,10 +99,10 @@ POST /api/auth/oauth2/token   (application/x-www-form-urlencoded)
 
 **검증 규칙 (반드시 전부):**
 
-1. 서명 — `jwks_uri` 의 키, `alg` 는 RS256 만 허용. 모르는 `kid` 면 JWKS 를 다시 받는다(빈도 제한).
+1. 서명: `jwks_uri` 의 키, `alg` 는 RS256 만 허용. 모르는 `kid` 면 JWKS 를 다시 받는다(빈도 제한).
 2. `iss == ACCOUNT_URL` (정확히 일치).
 3. **`aud` 는 배열일 수 있다. 자기 resource(`CALENDAR_URL` 또는 `DRIVE_URL`)가 포함돼 있어야 한다.**
-   `openid` scope 면 userinfo URL 이 함께 들어 있다 — 무시. 다른 앱용 토큰(aud 불일치)은 401.
+   `openid` scope 면 userinfo URL 이 함께 들어 있다: 무시. 다른 앱용 토큰(aud 불일치)은 401.
    (python-jose/PyJWT 의 `audience=` 옵션은 배열 `aud` 에서 포함 여부로 검사한다.)
 4. `exp` (시계 오차 ≤ 60초 권장).
 5. `sub` = 사용자 ID (계정 서버의 안정적 문자열 ID). 앱 로컬 `users.id` 로 쓴다.
@@ -122,7 +122,7 @@ POST /api/auth/oauth2/token   (application/x-www-form-urlencoded)
 - 앱은 소속을 **캐시로만** 저장한다 (원천은 계정 서버). 토큰을 받을 때마다 `workspaces` 로 로컬 멤버십을 동기화(upsert + 빠진 것 삭제)한다.
   앱 쪽 "회사 멤버 추가/제거" UI 는 없애고 계정 서버 링크(`${ACCOUNT_URL}/workspaces/{id}`)로 보낸다.
 
-**변경 전파:** 멤버 추가·제거·역할 변경·이름 변경은 **다음 토큰 갱신 때** 반영된다 — 최대 액세스 토큰 수명(15분).
+**변경 전파:** 멤버 추가·제거·역할 변경·이름 변경은 **다음 토큰 갱신 때** 반영된다: 최대 액세스 토큰 수명(15분).
 즉시 반영이 필요한 판단(예: 멤버 제거 직후 접근 차단)은 `GET /api/v1/workspaces` 로 최신 값을 조회한다.
 JWT 액세스 토큰은 폐기할 수 없으므로 앱 연결 해제·기기 로그아웃도 최대 15분 뒤 완전히 반영된다.
 
@@ -141,21 +141,21 @@ JWT 액세스 토큰은 폐기할 수 없으므로 앱 연결 해제·기기 로
 
 ### 9. 계정 서버 API (`/api/v1/*`, Bearer = 위 액세스 토큰)
 
-`aud` 가 1st-party resource(Calendar·Drive) 중 하나인 토큰이면 된다 — 앱 백엔드가 받은 토큰을 그대로 전달.
+`aud` 가 1st-party resource(Calendar·Drive) 중 하나인 토큰이면 된다: 앱 백엔드가 받은 토큰을 그대로 전달.
 응답은 snake_case JSON. 실패: 401 `{error:"invalid_token"|"unauthorized", error_description}` (+ `WWW-Authenticate`), 404 `{error:"not_found"}`.
 
 | 메서드 · 경로 | 응답 |
 |---|---|
 | `GET /api/v1/me` | `{ sub, email, email_verified, name, picture, workspaces: [{id,name,slug,role}] }` (최신값) |
 | `GET /api/v1/workspaces` | `{ workspaces: [{id,name,slug,role}] }` |
-| `GET /api/v1/workspaces/{id}` | `{ id, name, slug, personal, created_at, member_count, my_role }` — 멤버가 아니면 404 |
-| `GET /api/v1/workspaces/{id}/members` | `{ workspace_id, members: [{ sub, email, name, picture, role, joined_at }] }` — 멤버가 아니면 404 |
+| `GET /api/v1/workspaces/{id}` | `{ id, name, slug, personal, created_at, member_count, my_role }`: 멤버가 아니면 404 |
+| `GET /api/v1/workspaces/{id}/members` | `{ workspace_id, members: [{ sub, email, name, picture, role, joined_at }] }`: 멤버가 아니면 404 |
 
-쓰기 API 는 없다 — 워크스페이스·멤버 관리는 계정 서버 UI 에서만.
+쓰기 API 는 없다: 워크스페이스·멤버 관리는 계정 서버 UI 에서만.
 
 ### 10. 로그아웃
 
-- 앱 로그아웃: 앱 세션을 지우고 자기 refresh_token 을 `revocation_endpoint` 로 폐기한다. 계정 서버 세션까지 끝내려면 `end_session_endpoint` 로 `id_token_hint` + `post_logout_redirect_uri`(`${APP_URL}` 또는 `${APP_URL}/login`; Sync 는 등록 없음) 를 보낸다 (플러그인의 RP-initiated logout — 자동 테스트 범위 밖).
+- 앱 로그아웃: 앱 세션을 지우고 자기 refresh_token 을 `revocation_endpoint` 로 폐기한다. 계정 서버 세션까지 끝내려면 `end_session_endpoint` 로 `id_token_hint` + `post_logout_redirect_uri`(`${APP_URL}` 또는 `${APP_URL}/login`; Sync 는 등록 없음) 를 보낸다 (플러그인의 RP-initiated logout: 자동 테스트 범위 밖).
 - 계정 서버 로그아웃은 앱의 refresh_token 을 폐기하지 **않는다** (검증함: 로그아웃 뒤에도 갱신 200). 앱 접근까지 끊으려면 계정 홈 "연결된 앱" 에서 해제한다.
 
 ## 앱별 연결 요약
