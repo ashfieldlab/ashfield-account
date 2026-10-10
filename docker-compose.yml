@@ -1,0 +1,27 @@
+# 개발용 인프라 — Postgres 하나. 앱(Next.js)은 호스트에서 `make dev` 로 실행한다.
+#
+# 시작: make infra   ·   정지: make stop   ·   데이터까지 삭제: make clean
+# 호스트 포트는 POSTGRES_HOST_PORT 로 바꿀 수 있다 (기본 5632 — 형제 앱 5532·15532 등과 겹치지 않게).
+
+name: ashfield-account
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ashfield-account-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ashfield}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ashfield_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-ashfield_account}
+    ports:
+      - "${POSTGRES_HOST_PORT:-5632}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ashfield} -d ${POSTGRES_DB:-ashfield_account}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
