@@ -13,7 +13,7 @@ const SCOPE_INFO: Record<string, { label: string; icon: React.ReactNode }> = {
   openid: { label: "Ashfield 계정으로 본인 확인", icon: <KeyRound /> },
   profile: { label: "이름과 프로필 사진, 소속 워크스페이스 보기", icon: <UserRound /> },
   email: { label: "이메일 주소 보기", icon: <Mail /> },
-  offline_access: { label: "로그인 상태 유지 (다시 묻지 않고 접근)", icon: <ArrowLeftRight /> },
+  offline_access: { label: "로그인 상태 유지", icon: <ArrowLeftRight /> },
 }
 
 interface Props {
@@ -98,7 +98,6 @@ export function ConsentForm({ client, scopes, user }: Props) {
           허용
         </Button>
       </div>
-      <p className="mt-4 text-center text-xs text-muted-foreground">허용한 앱은 언제든 계정 홈의 ‘연결된 앱’에서 해제할 수 있습니다.</p>
     </AuthCard>
   )
 }

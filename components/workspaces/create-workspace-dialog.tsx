@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -47,13 +46,10 @@ export function CreateWorkspaceDialog({ trigger }: { trigger?: React.ReactNode }
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md" data-testid="workspaces-create-dialog">
+      <DialogContent className="sm:max-w-md" aria-describedby={undefined} data-testid="workspaces-create-dialog">
         <form onSubmit={submit} className="space-y-5">
           <DialogHeader>
             <DialogTitle>새 워크스페이스</DialogTitle>
-            <DialogDescription>
-              팀이나 회사 단위로 일정·파일을 함께 쓰는 공간입니다. 만든 사람이 소유자가 됩니다.
-            </DialogDescription>
           </DialogHeader>
           <div className="space-y-1.5">
             <Label htmlFor="ws-name">이름</Label>

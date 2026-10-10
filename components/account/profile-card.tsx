@@ -41,7 +41,7 @@ export function ProfileCard({
   }
 
   return (
-    <Section title="프로필" description="로그인한 계정(IdP)에서 가져온 정보입니다. 모든 Ashfield 앱에 같은 이름으로 보입니다." testId="profile-card">
+    <Section title="프로필" testId="profile-card">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
         <UserAvatar name={user.name} email={user.email} image={user.image} className="size-16 text-lg" />
         <div className="min-w-0 flex-1 space-y-1">

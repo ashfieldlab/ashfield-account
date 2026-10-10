@@ -26,10 +26,7 @@ export default async function AccountHomePage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={`안녕하세요, ${session.user.name}님`}
-        description="Ashfield 앱 전체에서 쓰는 계정 정보와 로그인 상태를 관리합니다."
-      />
+      <PageHeader title={`안녕하세요, ${session.user.name}님`} />
 
       <ProfileCard
         user={{

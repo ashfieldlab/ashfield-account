@@ -63,7 +63,7 @@ export function MembersList({
   async function remove(m: Member) {
     const ok = await confirm({
       title: `${m.name}님을 내보낼까요?`,
-      description: "이 워크스페이스의 데이터에 더 이상 접근할 수 없습니다. 앱에는 다음 토큰 갱신 때 반영됩니다.",
+      description: "이 워크스페이스에 더 이상 접근할 수 없습니다.",
       confirmText: "내보내기",
       variant: "destructive",
     })
@@ -79,7 +79,6 @@ export function MembersList({
   return (
     <Section
       title="멤버"
-      description="소유자: 모든 권한 · 관리자: 이름 변경·멤버 관리·초대 · 멤버: 워크스페이스 사용"
       testId="workspace-members"
     >
       <ul className="divide-y" data-testid="workspace-members-list">

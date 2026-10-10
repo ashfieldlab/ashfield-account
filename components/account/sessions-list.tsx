@@ -43,7 +43,7 @@ export function SessionsList({ sessions, currentSessionId }: { sessions: Session
   async function revokeOthers() {
     const ok = await confirm({
       title: "다른 모든 기기에서 로그아웃할까요?",
-      description: "이 브라우저를 제외한 계정 서버 로그인이 모두 끝납니다. 앱의 로그인은 ‘연결된 앱’에서 관리하세요.",
+      description: "이 브라우저를 제외한 모든 기기에서 로그아웃됩니다.",
       confirmText: "모두 로그아웃",
       variant: "destructive",
     })
@@ -59,7 +59,6 @@ export function SessionsList({ sessions, currentSessionId }: { sessions: Session
   return (
     <Section
       title="로그인된 브라우저"
-      description="Ashfield 계정 사이트에 로그인돼 있는 기기입니다."
       action={
         others > 0 ? (
           <Button variant="outline" size="sm" disabled={pending} onClick={() => void revokeOthers()} data-testid="sessions-revoke-others-button">

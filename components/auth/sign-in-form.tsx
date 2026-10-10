@@ -71,10 +71,10 @@ export function SignInForm({ callbackUrl, error, providers, devPasswordLogin, cl
   const nothingConfigured = providers.length === 0 && !devPasswordLogin
   const subtitle =
     context === "oauth" && clientName
-      ? `${clientName}에 로그인하려면 계속하세요.`
+      ? `${clientName}에 로그인`
       : context === "invite"
-        ? "워크스페이스 초대를 수락하려면 로그인하세요."
-        : "하나의 계정으로 모든 Ashfield 앱에 로그인합니다."
+        ? "워크스페이스 초대"
+        : null
 
   return (
     <AuthCard testId="sign-in-page">
@@ -82,9 +82,11 @@ export function SignInForm({ callbackUrl, error, providers, devPasswordLogin, cl
         <Image src="/icons/ashfield/mark.svg" alt="Ashfield" width={48} height={48} unoptimized className="size-12 rounded-xl shadow-sm" />
         <div className="space-y-1.5">
           <h1 className="text-xl font-semibold tracking-tight">Ashfield 계정으로 로그인</h1>
-          <p className="text-sm text-muted-foreground" data-testid="sign-in-subtitle">
-            {subtitle}
-          </p>
+          {subtitle && (
+            <p className="text-sm text-muted-foreground" data-testid="sign-in-subtitle">
+              {subtitle}
+            </p>
+          )}
         </div>
       </div>
 
@@ -136,9 +138,6 @@ export function SignInForm({ callbackUrl, error, providers, devPasswordLogin, cl
         </p>
       )}
 
-      <p className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">
-        계속하면 이 계정으로 Ashfield 앱에 로그인하는 데 동의하는 것으로 간주됩니다.
-      </p>
     </AuthCard>
   )
 }
@@ -188,7 +187,7 @@ function DevPasswordLogin({
         </div>
       )}
       <div className="flex items-center gap-2 rounded-md bg-amber-500/10 px-2.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400">
-        DEV: 이메일·비밀번호 로그인 (운영에서는 꺼짐)
+        DEV: 이메일·비밀번호 로그인
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="dev-email">이메일</Label>
@@ -221,7 +220,7 @@ function DevPasswordLogin({
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="dev-name">
-          이름 <span className="font-normal text-muted-foreground">(처음 가입 시)</span>
+          이름 <span className="font-normal text-muted-foreground">(가입 시)</span>
         </Label>
         <Input
           id="dev-name"

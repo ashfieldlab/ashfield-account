@@ -20,7 +20,6 @@ export default async function WorkspacesPage() {
     <div>
       <PageHeader
         title="워크스페이스"
-        description="Ashfield 앱이 함께 쓰는 팀 공간입니다. 앱에서는 같은 워크스페이스가 그대로 보입니다."
         action={<CreateWorkspaceDialog />}
       />
       <ul className="grid gap-3 sm:grid-cols-2" data-testid="workspaces-list">

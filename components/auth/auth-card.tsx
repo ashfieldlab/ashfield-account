@@ -24,7 +24,7 @@ export function AuthCard({
       </div>
       <footer className="mt-6 flex items-center gap-1.5 text-xs text-muted-foreground">
         <Logo size={14} withText={false} />
-        <span>Ashfield · 하나의 계정으로 모든 Ashfield 앱</span>
+        <span>Ashfield</span>
       </footer>
     </main>
   )

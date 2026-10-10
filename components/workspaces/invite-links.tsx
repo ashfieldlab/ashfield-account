@@ -58,7 +58,6 @@ export function InviteLinks({
   return (
     <Section
       title="초대 링크"
-      description="링크를 받은 사람은 Ashfield 계정으로 로그인해 바로 참여합니다. 링크는 7일 동안 여러 번 쓸 수 있습니다."
       action={
         <div className="flex items-center gap-2">
           <Select value={role} onValueChange={(v) => setRole(v as "member" | "admin")}>
@@ -86,7 +85,6 @@ export function InviteLinks({
         <EmptyState
           icon={<Link2 />}
           title="활성 초대 링크가 없습니다"
-          description="‘링크 만들기’로 링크를 만들어 메신저 등으로 보내세요."
           testId="invite-links-empty"
         />
       ) : (

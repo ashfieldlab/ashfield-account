@@ -30,7 +30,7 @@ export function WorkspaceGeneral({
     startTransition(async () => {
       const res = await renameWorkspaceAction(workspace.id, name)
       if (!res.ok) return void toast.error(res.error)
-      toast.success("이름을 바꿨습니다. 앱에는 다음 토큰 갱신(최대 15분) 때 반영됩니다.")
+      toast.success("이름을 바꿨습니다.")
       router.refresh()
     })
   }
@@ -56,7 +56,6 @@ export function WorkspaceGeneral({
               </Button>
             )}
           </div>
-          {!canEdit && <p className="text-xs text-muted-foreground">소유자·관리자만 이름을 바꿀 수 있습니다.</p>}
         </form>
         <div className="space-y-1.5">
           <Label>워크스페이스 ID</Label>
@@ -69,7 +68,6 @@ export function WorkspaceGeneral({
             </code>
             <CopyButton value={workspace.id} toastMessage="ID 를 복사했습니다." testId="workspace-id-copy-button" />
           </div>
-          <p className="text-xs text-muted-foreground">앱·API 연동에 쓰는 고유 ID 입니다.</p>
         </div>
       </div>
     </Section>

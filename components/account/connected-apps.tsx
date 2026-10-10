@@ -39,7 +39,7 @@ export function ConnectedApps({ apps }: { apps: ConnectedApp[] }) {
   async function disconnect(app: ConnectedApp) {
     const ok = await confirm({
       title: `${app.name} 연결을 해제할까요?`,
-      description: "이 앱의 모든 기기에서 로그아웃됩니다. 이미 발급된 액세스 토큰은 최대 15분 뒤 만료됩니다.",
+      description: "이 앱의 모든 기기에서 로그아웃됩니다.",
       confirmText: "연결 해제",
       variant: "destructive",
     })
@@ -64,14 +64,12 @@ export function ConnectedApps({ apps }: { apps: ConnectedApp[] }) {
   return (
     <Section
       title="연결된 앱"
-      description="Ashfield 계정으로 로그인한 앱과 기기입니다. 기기별로 로그아웃하거나 앱 연결을 해제할 수 있습니다."
       testId="connected-apps"
     >
       {apps.length === 0 ? (
         <EmptyState
           icon={<AppWindow />}
           title="아직 연결된 앱이 없습니다"
-          description="Ashfield Calendar·Drive·Sync 에 이 계정으로 로그인하면 여기에 나타납니다."
           testId="connected-apps-empty"
         />
       ) : (

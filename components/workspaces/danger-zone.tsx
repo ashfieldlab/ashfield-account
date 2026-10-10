@@ -43,7 +43,7 @@ export function DangerZone({
   async function remove() {
     const ok = await confirm({
       title: `‘${workspace.name}’을(를) 삭제할까요?`,
-      description: "모든 멤버가 접근을 잃고 되돌릴 수 없습니다. 각 앱에 남은 데이터 처리는 앱의 정책을 따릅니다.",
+      description: "모든 멤버가 접근을 잃으며 되돌릴 수 없습니다.",
       confirmText: "삭제",
       variant: "destructive",
     })
@@ -65,13 +65,13 @@ export function DangerZone({
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-6">
           <div className="space-y-0.5">
             <div className="text-sm font-medium">워크스페이스 나가기</div>
-            <div className="text-sm text-muted-foreground">
-              {workspace.personal && soleOwner
-                ? "개인 워크스페이스에서는 나갈 수 없습니다."
-                : soleOwner
-                  ? "유일한 소유자는 나갈 수 없습니다. 먼저 다른 멤버를 소유자로 지정하세요."
-                  : "이 워크스페이스의 멤버에서 빠집니다."}
-            </div>
+            {soleOwner && (
+              <div className="text-sm text-muted-foreground">
+                {workspace.personal
+                  ? "개인 워크스페이스에서는 나갈 수 없습니다."
+                  : "유일한 소유자는 나갈 수 없습니다. 먼저 다른 멤버를 소유자로 지정하세요."}
+              </div>
+            )}
           </div>
           <Button variant="outline" disabled={pending || soleOwner} onClick={() => void leave()} data-testid="workspace-leave-button">
             <LogOut />
