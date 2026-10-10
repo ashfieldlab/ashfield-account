@@ -1,5 +1,5 @@
 /**
- * 1st-party OAuth 클라이언트·리소스 정의 — `npm run seed:clients` 와 server.ts 가 같이 쓴다.
+ * 1st-party OAuth 클라이언트·리소스 정의: `npm run seed:clients` 와 server.ts 가 같이 쓴다.
  * 값은 env(.env)에서 온다. 계약: docs/adr/0001-account-server-contract.md.
  * 경로 별칭(@/) 금지 (Better Auth CLI·tsx 가 읽음).
  */
@@ -46,7 +46,7 @@ export function firstPartyClients(): FirstPartyClient[] {
       resources: [env.driveURL],
     },
     {
-      // Windows 데스크톱 클라이언트 (Drive 동기화) — 공개 클라이언트, loopback redirect, PKCE.
+      // Windows 데스크톱 클라이언트 (Drive 동기화): 공개 클라이언트, loopback redirect, PKCE.
       clientId: "ashfield-sync",
       name: "Ashfield Sync",
       uri: env.driveURL,

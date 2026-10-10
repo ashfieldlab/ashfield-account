@@ -188,7 +188,7 @@ function DevPasswordLogin({
         </div>
       )}
       <div className="flex items-center gap-2 rounded-md bg-amber-500/10 px-2.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400">
-        DEV — 이메일·비밀번호 로그인 (운영에서는 꺼짐)
+        DEV: 이메일·비밀번호 로그인 (운영에서는 꺼짐)
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="dev-email">이메일</Label>

@@ -42,7 +42,7 @@ export async function revokeGrantAction(grantId: string): Promise<ActionResult> 
   return ok ? { ok: true } : { ok: false, error: "이미 로그아웃된 기기입니다." }
 }
 
-/** 앱 연결 해제 — 모든 기기 로그아웃 + 동의 철회. */
+/** 앱 연결 해제: 모든 기기 로그아웃 + 동의 철회. */
 export async function disconnectAppAction(clientId: string): Promise<ActionResult> {
   const session = await requireSession()
   await disconnectApp(session.user.id, clientId)

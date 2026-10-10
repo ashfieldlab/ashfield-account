@@ -1,5 +1,5 @@
 /**
- * 1st-party OAuth 클라이언트 등록 (멱등) — `npm run seed:clients` (= make seed).
+ * 1st-party OAuth 클라이언트 등록 (멱등): `npm run seed:clients` (= make seed).
  *
  *   ashfield-calendar · ashfield-drive : confidential(web), PKCE 필수, 동의 화면 생략
  *   ashfield-sync                      : public(native), PKCE 필수, loopback redirect
@@ -59,7 +59,7 @@ async function main() {
       grantTypes: ["authorization_code", "refresh_token"],
       responseTypes: ["code"],
       scopes: [...OIDC_SCOPES],
-      skipConsent: true, // 1st-party — 동의 화면 생략
+      skipConsent: true, // 1st-party: 동의 화면 생략
       enableEndSession: true,
       requirePKCE: true,
       disabled: false,

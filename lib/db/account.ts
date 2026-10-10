@@ -1,5 +1,5 @@
 /**
- * 계정 홈 조회 — OAuth 로 연결된 앱과 그 기기(리프레시 토큰) 목록.
+ * 계정 홈 조회: OAuth 로 연결된 앱과 그 기기(리프레시 토큰) 목록.
  * 테이블은 @better-auth/oauth-provider 기본 이름. 서버 전용.
  */
 import "server-only"
@@ -7,7 +7,7 @@ import "server-only"
 import { pool } from "./pool"
 
 export interface AppGrant {
-  /** oauthRefreshToken.id — 연결 해제 대상 */
+  /** oauthRefreshToken.id: 연결 해제 대상 */
   id: string
   createdAt: string
   expiresAt: string
@@ -90,7 +90,7 @@ export async function revokeGrant(userId: string, grantId: string): Promise<bool
   return (res.rowCount ?? 0) > 0
 }
 
-/** 앱 연결 해제 — 그 앱의 모든 리프레시 토큰 폐기 + 동의 삭제. 이미 발급된 액세스 토큰은 만료(≤ TTL)까지 유효. */
+/** 앱 연결 해제: 그 앱의 모든 리프레시 토큰 폐기 + 동의 삭제. 이미 발급된 액세스 토큰은 만료(≤ TTL)까지 유효. */
 export async function disconnectApp(userId: string, clientId: string): Promise<void> {
   await pool.query(
     `update "oauthRefreshToken" set "revoked" = now()

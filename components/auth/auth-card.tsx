@@ -1,7 +1,7 @@
 import { Logo } from "@/components/shared/logo"
 import { cn } from "@/lib/utils"
 
-/** 로그인·동의·초대 화면 공통 — 은은한 배경 위 가운데 카드. */
+/** 로그인·동의·초대 화면 공통: 은은한 배경 위 가운데 카드. */
 export function AuthCard({
   children,
   className,

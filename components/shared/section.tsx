@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 
-/** 계정 화면의 카드형 섹션 — 제목·설명·우측 액션 + 본문. */
+/** 계정 화면의 카드형 섹션: 제목·설명·우측 액션 + 본문. */
 export function Section({
   title,
   description,

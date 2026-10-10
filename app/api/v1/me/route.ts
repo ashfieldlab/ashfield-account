@@ -4,7 +4,7 @@ import { listUserWorkspaces } from "@/lib/db/workspaces"
 
 export const dynamic = "force-dynamic"
 
-/** GET /api/v1/me — 토큰 주인의 최신 프로필 + 워크스페이스 (토큰 클레임보다 최신). */
+/** GET /api/v1/me: 토큰 주인의 최신 프로필 + 워크스페이스 (토큰 클레임보다 최신). */
 export async function GET(req: Request) {
   const auth = await verifyBearer(req)
   if (!auth.ok) return auth.response

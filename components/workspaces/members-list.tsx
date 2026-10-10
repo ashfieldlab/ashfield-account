@@ -42,7 +42,7 @@ export function MembersList({
   const router = useRouter()
   const [pending, startTransition] = useTransition()
 
-  /** 서버(org 플러그인)가 최종 판단 — 여기선 명백히 안 되는 조작만 숨긴다. */
+  /** 서버(org 플러그인)가 최종 판단: 여기선 명백히 안 되는 조작만 숨긴다. */
   function canEdit(target: Member): boolean {
     if (target.user_id === currentUserId) return false
     if (myRole === "owner") return true

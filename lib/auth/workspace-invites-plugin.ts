@@ -1,5 +1,5 @@
 /**
- * 워크스페이스 초대 "링크" 테이블 — Better Auth organization 플러그인의 초대는 이메일 기반이라
+ * 워크스페이스 초대 "링크" 테이블: Better Auth organization 플러그인의 초대는 이메일 기반이라
  * (수락 시 이메일 일치 검사) 링크 초대를 위해 별도 모델을 둔다.
  *
  * 엔드포인트 없이 스키마만 선언하는 플러그인 → `npm run migrate`(Better Auth CLI)가 테이블을

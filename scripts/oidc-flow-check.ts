@@ -1,5 +1,5 @@
 /**
- * OIDC 종단 점검 — `ashfield-sync`(public, PKCE) 클라이언트로 실제 흐름을 끝까지 돈다.
+ * OIDC 종단 점검: `ashfield-sync`(public, PKCE) 클라이언트로 실제 흐름을 끝까지 돈다.
  *
  *   npm run oidc:check        (= make oidc-check; 서버가 ACCOUNT_URL 에 떠 있어야 함,
  *                              AUTH_DEV_PASSWORD_LOGIN=true, seed:clients 완료)
@@ -7,7 +7,7 @@
  *  1. 디스커버리 · JWKS
  *  2. /oauth2/authorize (세션 없음) → /sign-in?…&sig=… 로 보내지는지
  *  3. 그 서명된 쿼리를 붙여 DEV 비밀번호 로그인 → 앱 redirect_uri(loopback)로 code 가 오는지
- *     — 127.0.0.1:1421 에 실제 loopback 리스너를 띄워 브라우저처럼 따라가 code 를 받는다
+ *    : 127.0.0.1:1421 에 실제 loopback 리스너를 띄워 브라우저처럼 따라가 code 를 받는다
  *  4. code + PKCE verifier + resource → 토큰 (JWT access, id_token, refresh)
  *  5. JWKS 로 서명·iss·aud·exp 검증, `workspaces` 클레임(개인 워크스페이스 owner) 확인
  *  6. /oauth2/userinfo, /api/v1/me, /api/v1/workspaces/{id}/members
@@ -88,7 +88,7 @@ async function main() {
     code_challenge_method: "S256",
     resource: RESOURCE,
   }).toString()
-  // 브라우저 내비게이션이면 302, fetch(sec-fetch-mode: cors)면 200 {redirect, url} — 둘 다 받는다.
+  // 브라우저 내비게이션이면 302, fetch(sec-fetch-mode: cors)면 200 {redirect, url}: 둘 다 받는다.
   const r1 = await fetch(authorizeUrl, { redirect: "manual", headers: { accept: "text/html" } })
   const loginLocation =
     r1.headers.get("location") ?? ((await r1.json().catch(() => ({}))) as { url?: string }).url ?? ""

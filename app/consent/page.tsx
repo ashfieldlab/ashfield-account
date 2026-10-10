@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * OAuth 동의 화면 — 3rd-party 클라이언트만 온다 (1st-party 는 skipConsent).
+ * OAuth 동의 화면: 3rd-party 클라이언트만 온다 (1st-party 는 skipConsent).
  * /api/auth/oauth2/authorize 가 `?client_id&scope&…&sig` 로 보낸다. 수락/거부는 서명된 쿼리와
  * 함께 /api/auth/oauth2/consent 로 (oauthProviderClient 가 자동 첨부).
  */

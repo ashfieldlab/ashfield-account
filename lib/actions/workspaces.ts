@@ -140,7 +140,7 @@ export async function revokeInviteLinkAction(organizationId: string, inviteId: s
   return { ok: true }
 }
 
-/** 초대 수락 — 로그인한 본인을 멤버로 추가. 이미 멤버면 그대로 성공. */
+/** 초대 수락: 로그인한 본인을 멤버로 추가. 이미 멤버면 그대로 성공. */
 export async function acceptInviteAction(inviteId: string): Promise<ActionResult<{ organizationId: string }>> {
   const session = await requireSession(`/invite/${inviteId}`)
   const invite = await getInviteLink(inviteId)

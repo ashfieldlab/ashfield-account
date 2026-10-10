@@ -1,4 +1,4 @@
-/** 날짜 표시 — 한국어. 서버·클라이언트 공용 (Asia/Seoul 고정으로 hydration 차이 방지). */
+/** 날짜 표시: 한국어. 서버·클라이언트 공용 (Asia/Seoul 고정으로 hydration 차이 방지). */
 const dateFmt = new Intl.DateTimeFormat("ko-KR", {
   year: "numeric",
   month: "long",
@@ -40,7 +40,7 @@ export function formatRemaining(d: string | Date, now: Date = new Date()): strin
   return `${Math.ceil(diff / 86400)}일 남음`
 }
 
-/** 세션 IP 표시 — 루프백은 알아보기 쉽게. */
+/** 세션 IP 표시: 루프백은 알아보기 쉽게. */
 export function formatIp(ip: string | null | undefined): string | null {
   if (!ip) return null
   // Better Auth 는 IPv6 를 /64 로 가린다 → ::1 이 0000:…:0000 으로 보인다.

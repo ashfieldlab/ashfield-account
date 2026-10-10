@@ -3,7 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "./theme.css";
 
-/* 계정 서버 전용 — 은은한 브랜드 배경 (로그인·동의·초대 화면). */
+/* 계정 서버 전용: 은은한 브랜드 배경 (로그인·동의·초대 화면). */
 @utility bg-auth-backdrop {
   background-color: var(--muted);
   background-image:

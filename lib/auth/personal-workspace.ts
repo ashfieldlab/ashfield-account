@@ -1,10 +1,10 @@
 /**
- * 개인 워크스페이스 — 사용자마다 하나, 가입 직후 자동 생성 (owner).
+ * 개인 워크스페이스: 사용자마다 하나, 가입 직후 자동 생성 (owner).
  *
  * 멱등: 결정적 slug(`personal-{userId}`) 로 먼저 찾고, 없을 때만 만든다. 동시 요청이 겹쳐
  * slug 유니크 제약에 걸리면 "이미 있음" 으로 보고 다시 찾는다. 멤버십이 빠져 있으면 채운다.
  *
- * DB 접근은 `WorkspaceStore` 로 주입 — Better Auth 어댑터 구현은 `betterAuthWorkspaceStore`,
+ * DB 접근은 `WorkspaceStore` 로 주입: Better Auth 어댑터 구현은 `betterAuthWorkspaceStore`,
  * 단위 테스트는 인메모리 구현을 쓴다 (personal-workspace.test.ts).
  *
  * Better Auth CLI 가 server.ts 를 통해 이 파일을 읽으므로 경로 별칭(@/)을 쓰지 않는다.

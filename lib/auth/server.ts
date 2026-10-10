@@ -1,5 +1,5 @@
 /**
- * Better Auth 서버 인스턴스 — 계정 서버의 단일 설정 지점.
+ * Better Auth 서버 인스턴스: 계정 서버의 단일 설정 지점.
  *
  *   - 핸들러: app/api/auth/[...all]/route.ts (`/api/auth/*`), 디스커버리: app/.well-known/*.
  *   - 로그인: Google·GitHub (CLIENT_ID/SECRET 둘 다 있을 때만) + DEV 이메일·비밀번호
@@ -45,7 +45,7 @@ if (env.githubClientId && env.githubClientSecret) {
 /** 로그인 화면이 버튼을 그릴 제공자 (설정된 것만). */
 export const enabledSocialProviders = Object.keys(socialProviders) as ("google" | "github")[]
 
-/** 이메일+비밀번호 DEV 로그인 — 명시 플래그 + 비운영일 때만. */
+/** 이메일+비밀번호 DEV 로그인: 명시 플래그 + 비운영일 때만. */
 export const devPasswordLoginEnabled = env.devPasswordLoginRequested && !env.isProduction
 
 if (env.devPasswordLoginRequested && env.isProduction && !env.isBuildPhase) {
@@ -57,7 +57,7 @@ if (env.devPasswordLoginRequested && env.isProduction && !env.isBuildPhase) {
 
 const allowlist = parseEmailList(env.allowedEmails)
 
-/** 개인 워크스페이스 보장 — 실패해도 로그인은 막지 않는다 (다음 로그인 때 다시 시도). */
+/** 개인 워크스페이스 보장: 실패해도 로그인은 막지 않는다 (다음 로그인 때 다시 시도). */
 async function ensurePersonal(
   adapter: MinimalAdapter,
   user: { id: string; name?: string | null; email: string },
@@ -100,7 +100,7 @@ export const auth = betterAuth({
     },
     session: {
       create: {
-        // 비밀번호 재로그인처럼 validateUserInfo 를 안 타는 경로까지 — 세션 발급 직전에 한 번 더.
+        // 비밀번호 재로그인처럼 validateUserInfo 를 안 타는 경로까지: 세션 발급 직전에 한 번 더.
         before: async (session, ctx) => {
           if (allowlist.size === 0) return
           const user = await ctx?.context.internalAdapter.findUserById(session.userId)
@@ -119,7 +119,7 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "ashfield-account",
-    // 스키마 검증(누락 시 "npm run migrate" 안내)은 런타임에만 — 빌드·마이그레이션 중엔 끈다.
+    // 스키마 검증(누락 시 "npm run migrate" 안내)은 런타임에만: 빌드·마이그레이션 중엔 끈다.
     database: { validateSchema: !env.isBuildPhase && !env.skipSchemaCheck },
   },
   plugins: [

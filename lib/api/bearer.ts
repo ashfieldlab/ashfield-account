@@ -1,5 +1,5 @@
 /**
- * /api/v1/* 의 Bearer 인증 — 이 서버가 발급한 OAuth 액세스 토큰(JWT)만 받는다.
+ * /api/v1/* 의 Bearer 인증: 이 서버가 발급한 OAuth 액세스 토큰(JWT)만 받는다.
  *
  *   - 서명: 자기 JWKS (DB 의 jwks 테이블; 60초 캐시)
  *   - iss = ACCOUNT_URL, aud ∋ 1st-party 리소스(CALENDAR_URL | DRIVE_URL) 중 하나, exp

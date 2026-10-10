@@ -1,5 +1,5 @@
 /**
- * 환경 변수 접근 통일 — `process.env.*` 는 이 파일에서만 읽는다.
+ * 환경 변수 접근 통일: `process.env.*` 는 이 파일에서만 읽는다.
  *
  * 모든 값은 서버 전용이다 (NEXT_PUBLIC_* 없음). 클라이언트 컴포넌트는 서버 컴포넌트가 props 로
  * 넘긴 값만 쓴다. 키 설명은 `.env.example` 참조.
@@ -44,7 +44,7 @@ export const env = {
   get isBuildPhase(): boolean {
     return process.env.NEXT_PHASE === "phase-production-build"
   },
-  /** `npm run migrate` 가 켠다 — 테이블이 아직 없을 때 시작 시 스키마 검사 오류를 띄우지 않게. */
+  /** `npm run migrate` 가 켠다: 테이블이 아직 없을 때 시작 시 스키마 검사 오류를 띄우지 않게. */
   get skipSchemaCheck(): boolean {
     return process.env.AUTH_SKIP_SCHEMA_CHECK === "true"
   },

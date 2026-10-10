@@ -1,5 +1,5 @@
 /**
- * 워크스페이스 초대 링크 (workspaceInvite 테이블 — lib/auth/workspace-invites-plugin.ts).
+ * 워크스페이스 초대 링크 (workspaceInvite 테이블: lib/auth/workspace-invites-plugin.ts).
  * 서버 전용. 권한 검사는 호출부(lib/actions/workspaces.ts)가 한다.
  */
 import "server-only"
@@ -61,7 +61,7 @@ export async function listActiveInviteLinks(organizationId: string): Promise<Inv
   return rows.map(toInvite)
 }
 
-/** 초대 + 워크스페이스 이름 (만료 포함 — 화면에서 만료 안내). */
+/** 초대 + 워크스페이스 이름 (만료 포함: 화면에서 만료 안내). */
 export async function getInviteLink(
   id: string,
 ): Promise<(InviteLink & { organizationName: string; expired: boolean }) | null> {

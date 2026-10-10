@@ -1,5 +1,5 @@
 /**
- * 워크스페이스 조회 SQL — 토큰 클레임(`workspaces`)과 /api/v1/* 가 같은 함수를 쓴다.
+ * 워크스페이스 조회 SQL: 토큰 클레임(`workspaces`)과 /api/v1/* 가 같은 함수를 쓴다.
  * 테이블·컬럼은 Better Auth organization 플러그인 기본 이름 (camelCase, 따옴표 필요).
  * 경로 별칭(@/) 금지 (server.ts 경유로 Better Auth CLI 가 읽음).
  */
@@ -79,7 +79,7 @@ export interface WorkspaceSummary extends WorkspaceClaim {
   created_at: string
 }
 
-/** 워크스페이스 목록 화면용 — 멤버 수·개인 여부 포함. */
+/** 워크스페이스 목록 화면용: 멤버 수·개인 여부 포함. */
 export async function listUserWorkspaceSummaries(userId: string): Promise<WorkspaceSummary[]> {
   const { rows } = await pool.query(
     `select o."id" as id, o."name" as name, o."slug" as slug, m."role" as role,

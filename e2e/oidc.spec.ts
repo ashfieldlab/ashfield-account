@@ -1,5 +1,5 @@
 /**
- * 브라우저로 도는 OIDC — 로그인 화면이 OAuth 흐름을 이어 가는지(서명된 쿼리), 1st-party 는 동의 생략,
+ * 브라우저로 도는 OIDC: 로그인 화면이 OAuth 흐름을 이어 가는지(서명된 쿼리), 1st-party 는 동의 생략,
  * 3rd-party 는 동의 화면을 거치는지, 계정 홈 '연결된 앱'에 나타나고 해제되는지.
  * 토큰·클레임·회전의 세부 검증은 scripts/oidc-flow-check.ts (make oidc-check).
  */

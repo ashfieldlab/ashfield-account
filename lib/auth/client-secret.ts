@@ -1,5 +1,5 @@
 /**
- * OAuth confidential client secret 저장 형식 — SHA-256 → base64url(패딩 없음).
+ * OAuth confidential client secret 저장 형식: SHA-256 → base64url(패딩 없음).
  * oauthProvider({ storeClientSecret }) 와 seed 스크립트가 같은 함수를 쓴다.
  */
 import { createHash, timingSafeEqual } from "node:crypto"

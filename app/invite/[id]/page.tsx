@@ -11,7 +11,7 @@ import { getInviteLink, getMemberRole } from "@/lib/db/invites"
 export const metadata: Metadata = { title: "워크스페이스 초대" }
 export const dynamic = "force-dynamic"
 
-/** 초대 링크 수락 — 로그인 필수 (없으면 /sign-in 으로 갔다가 돌아온다). */
+/** 초대 링크 수락: 로그인 필수 (없으면 /sign-in 으로 갔다가 돌아온다). */
 export default async function InvitePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const session = await requireSession(`/invite/${id}`)

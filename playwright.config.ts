@@ -3,7 +3,7 @@ import "dotenv/config"
 import { defineConfig, devices } from "@playwright/test"
 
 /**
- * E2E — `make e2e` (전제: make infra · make migrate · make seed, .env 에 AUTH_DEV_PASSWORD_LOGIN=true).
+ * E2E: `make e2e` (전제: make infra · make migrate · make seed, .env 에 AUTH_DEV_PASSWORD_LOGIN=true).
  * 서버가 이미 3300 에 떠 있으면 재사용, 아니면 `npm run dev` 를 띄운다.
  *
  * 최신 Ubuntu 처럼 Playwright 가 OS 를 모를 때 브라우저 설치:

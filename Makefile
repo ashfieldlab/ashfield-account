@@ -1,4 +1,4 @@
-# Ashfield Account — 개발 명령. `make help` 로 목록.
+# Ashfield Account: 개발 명령. `make help` 로 목록.
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
@@ -57,7 +57,7 @@ browsers:  ## Playwright 브라우저 설치 (Ubuntu 26.04 등 미지원 OS 는 
 e2e:  ## Playwright E2E (전제: infra·migrate·seed, AUTH_DEV_PASSWORD_LOGIN=true. 서버는 자동 기동/재사용)
 	npm run e2e
 
-oidc-check:  ## OIDC 종단 점검 — ashfield-sync 로 authorize→PKCE→token→JWKS 검증→refresh 회전 (서버 기동 필요)
+oidc-check:  ## OIDC 종단 점검: ashfield-sync 로 authorize→PKCE→token→JWKS 검증→refresh 회전 (서버 기동 필요)
 	npm run oidc:check
 
-ci-local: lint typecheck test build  ## push 전 로컬 점검 (e2e·oidc-check 는 서버 필요 — 별도)
+ci-local: lint typecheck test build  ## push 전 로컬 점검 (e2e·oidc-check 는 서버 필요: 별도)

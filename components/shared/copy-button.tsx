@@ -28,7 +28,7 @@ export function CopyButton({
     try {
       await navigator.clipboard.writeText(value)
     } catch {
-      // 비보안 컨텍스트(http LAN 등) — 임시 textarea 로 대체
+      // 비보안 컨텍스트(http LAN 등): 임시 textarea 로 대체
       const ta = document.createElement("textarea")
       ta.value = value
       document.body.appendChild(ta)
