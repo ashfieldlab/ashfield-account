@@ -4,7 +4,7 @@ SHELL := /bin/bash
 
 .PHONY: help setup install infra stop clean migrate seed seed-rotate dev build start \
         lint typecheck test e2e browsers oidc-check ci-local \
-        deploy-upload deploy-init deploy deploy-ps deploy-logs deploy-backup
+        deploy-git-init deploy-init deploy deploy-ps deploy-logs deploy-backup
 
 help:  ## 명령 목록
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -63,21 +63,24 @@ oidc-check:  ## OIDC 종단 점검: ashfield-sync 로 authorize→PKCE→token�
 
 ci-local: lint typecheck test build  ## push 전 로컬 점검 (e2e, oidc-check 는 서버 필요: 별도)
 
-# ---- 운영 배포 (docs/deploy.md): HEAD 를 git archive 로 서버에 올리고 서버의 scripts/prod.sh 실행 ----
+# ---- 운영 배포 (docs/deploy.md): 서버가 GitHub origin/main 을 받아 scripts/prod.sh 실행 ----
 DEPLOY_HOST ?= ovm
 DEPLOY_DIR ?= ashfield/account
-# 서버 디렉터리를 비우고 다시 풀 때 남길 것 (서버 전용 비밀값, 백업)
-DEPLOY_KEEP := ! -name .env.prod ! -name .secrets ! -name backups
+# 서버는 레포 전용 읽기 전용 deploy key (ssh 별칭 github-<repo>) 로 GitHub 에서 직접 받는다.
+# 추적하지 않는 서버 전용 파일(.env.prod, backups/ 등)은 그대로 남는다.
+DEPLOY_SLUG := $(shell git remote get-url origin | sed -E 's#\.git$$##; s#^.*[:/]([^/]+/[^/]+)$$#\1#')
+DEPLOY_PULL := git -C $(DEPLOY_DIR) fetch -q origin main && git -C $(DEPLOY_DIR) checkout -q -f -B main origin/main && git -C $(DEPLOY_DIR) log -1 --format="→ %h %s"
 
-deploy-upload:
-	@git diff --quiet HEAD || echo "! 커밋하지 않은 변경은 올라가지 않습니다 (git archive HEAD)"
-	git archive --format=tar HEAD | ssh $(DEPLOY_HOST) 'set -e; test -n "$(DEPLOY_DIR)"; mkdir -p $(DEPLOY_DIR); find $(DEPLOY_DIR) -mindepth 1 -maxdepth 1 $(DEPLOY_KEEP) -exec rm -rf {} +; tar -x -C $(DEPLOY_DIR)'
+deploy-git-init:  ## 처음 한 번: 서버에 deploy key 를 만들고 배포 디렉터리를 GitHub 체크아웃으로 (키 등록 안내가 나오면 등록 후 다시 실행)
+	ssh $(DEPLOY_HOST) 'sh -s -- $(DEPLOY_SLUG) $(DEPLOY_DIR)' < scripts/server-git-init.sh
 
-deploy-init: deploy-upload  ## 처음 한 번: 서버에 .env.prod 생성, 비밀값은 서버에서 생성 (ADMIN_EMAIL=허용 이메일)
-	ssh $(DEPLOY_HOST) 'ADMIN_EMAIL="$(ADMIN_EMAIL)" sh $(DEPLOY_DIR)/scripts/prod.sh init-env'
 
-deploy: deploy-upload  ## 운영 배포: 업로드, 빌드, 마이그레이션, 클라이언트 등록, 재시작
-	ssh $(DEPLOY_HOST) 'sh $(DEPLOY_DIR)/scripts/prod.sh up'
+deploy-init: ## 처음 한 번: 서버에 .env.prod 생성, 비밀값은 서버에서 생성 (ADMIN_EMAIL=허용 이메일)
+	ssh $(DEPLOY_HOST) '$(DEPLOY_PULL) && ADMIN_EMAIL="$(ADMIN_EMAIL)" sh $(DEPLOY_DIR)/scripts/prod.sh init-env'
+
+deploy: ## 운영 배포: GitHub origin/main 받기, 빌드, 마이그레이션, 클라이언트 등록, 재시작
+	@git fetch -q origin main && test -z "$$(git log --oneline origin/main..HEAD)" || echo "! push 하지 않은 커밋은 배포되지 않습니다 (서버는 origin/main 을 받는다)"
+	ssh $(DEPLOY_HOST) '$(DEPLOY_PULL) && sh $(DEPLOY_DIR)/scripts/prod.sh up'
 
 deploy-ps:  ## 운영 컨테이너 상태
 	ssh $(DEPLOY_HOST) 'sh $(DEPLOY_DIR)/scripts/prod.sh ps'
