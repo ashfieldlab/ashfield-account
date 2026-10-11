@@ -1,0 +1,86 @@
+# 운영 배포: 단일 호스트 docker compose (docs/deploy.md).
+#
+# 서버에서 scripts/prod.sh 가 이 파일로 빌드, 마이그레이션, 클라이언트 등록, 기동을 한다 (로컬: make deploy).
+#   docker compose -f docker-compose.prod.yml --env-file .env.prod ...
+# 밖으로 여는 포트는 app 하나: 앞단 리버스 프록시(다른 기계)가 LAN 으로 받아 TLS 를 끝낸다.
+
+name: ${COMPOSE_PROJECT_NAME:-ashfield-account-prod}
+
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+
+# app, migrate, seed 가 같이 쓰는 값. 키 설명은 .env.example.
+x-app-env: &app_env
+  NODE_ENV: production
+  ACCOUNT_URL: ${ACCOUNT_URL:?ACCOUNT_URL 필요}
+  BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET 필요}
+  DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+  GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+  GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+  GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+  GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+  ALLOWED_EMAILS: ${ALLOWED_EMAILS:-}
+  ACCESS_TOKEN_TTL_SECONDS: ${ACCESS_TOKEN_TTL_SECONDS:-900}
+  REFRESH_TOKEN_TTL_SECONDS: ${REFRESH_TOKEN_TTL_SECONDS:-2592000}
+  CALENDAR_URL: ${CALENDAR_URL:?CALENDAR_URL 필요}
+  DRIVE_URL: ${DRIVE_URL:?DRIVE_URL 필요}
+  CALENDAR_REDIRECT_URIS: ${CALENDAR_REDIRECT_URIS:-}
+  DRIVE_REDIRECT_URIS: ${DRIVE_REDIRECT_URIS:-}
+  SYNC_REDIRECT_URIS: ${SYNC_REDIRECT_URIS:-}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    <<: *restart_policy
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      target: runtime
+    <<: *restart_policy
+    environment: *app_env
+    ports:
+      - "${APP_HOST_PORT:-3300}:3000"
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  # Better Auth 테이블 생성과 갱신: 일회성 (scripts/prod.sh up 이 매 배포 실행).
+  migrate:
+    build:
+      context: .
+      target: builder
+    profiles: ["tools"]
+    command: ["node_modules/.bin/auth", "migrate", "--config", "lib/auth/server.ts", "--yes"]
+    environment:
+      <<: *app_env
+      AUTH_SKIP_SCHEMA_CHECK: "true"
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  # 1st-party OAuth 클라이언트 등록과 갱신 (멱등): 새 secret 은 ./.secrets/clients.local.json 에만 쓴다.
+  # 파일 소유자가 서버 사용자가 되도록 `run --user $(id -u):$(id -g)` 로 실행한다.
+  seed:
+    build:
+      context: .
+      target: builder
+    profiles: ["tools"]
+    command: ["node_modules/.bin/tsx", "scripts/seed-clients.ts", "--no-print"]
+    environment: *app_env
+    volumes:
+      - ./.secrets:/app/.secrets
+    depends_on:
+      postgres: { condition: service_healthy }
+
+volumes:
+  pgdata:

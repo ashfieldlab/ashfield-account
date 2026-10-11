@@ -9,6 +9,9 @@ next-env.d.ts
 .env
 .env.local
 .env.*.local
+# 운영 비밀값: 서버에만 둔다 (docs/deploy.md)
+.env.prod
+backups/
 
 # seed:clients 가 만든 confidential client secret (절대 커밋 금지)
 .secrets/

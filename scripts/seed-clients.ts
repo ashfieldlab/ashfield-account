@@ -10,6 +10,7 @@
  *
  *   npm run seed:clients               # 생성과 갱신
  *   npm run seed:clients -- --rotate   # confidential secret 재발급
+ *   ... --no-print                      # secret 을 콘솔에 찍지 않고 파일에만 저장 (운영, scripts/prod.sh)
  */
 import "dotenv/config"
 
@@ -25,6 +26,7 @@ import { env } from "../lib/env"
 
 const SECRETS_FILE = path.resolve(process.cwd(), ".secrets/clients.local.json")
 const rotate = process.argv.includes("--rotate")
+const printSecrets = !process.argv.includes("--no-print")
 
 type SecretsFile = Record<string, { client_secret: string; created_at: string }>
 
@@ -121,8 +123,12 @@ async function main() {
     for (const [id, s] of Object.entries(issued)) secrets[id] = { client_secret: s, created_at: createdAt }
     await mkdir(path.dirname(SECRETS_FILE), { recursive: true })
     await writeFile(SECRETS_FILE, JSON.stringify(secrets, null, 2) + "\n", { mode: 0o600 })
-    console.log("\n새 client secret (각 앱 .env 의 client secret 으로):")
-    for (const [id, s] of Object.entries(issued)) console.log(`  ${id}: ${s}`)
+    if (printSecrets) {
+      console.log("\n새 client secret (각 앱 .env 의 client secret 으로):")
+      for (const [id, s] of Object.entries(issued)) console.log(`  ${id}: ${s}`)
+    } else {
+      console.log(`\n새 client secret 발급: ${Object.keys(issued).join(", ")} (값은 출력하지 않음)`)
+    }
     console.log(`→ ${path.relative(process.cwd(), SECRETS_FILE)} 에도 저장했습니다 (gitignore).`)
   } else {
     console.log(`\nsecret 변경 없음. 기존 값: ${path.relative(process.cwd(), SECRETS_FILE)} (재발급: --rotate)`)
