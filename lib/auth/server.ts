@@ -34,12 +34,13 @@ import {
 } from "./personal-workspace"
 import { workspaceInvites } from "./workspace-invites-plugin"
 
+// prompt=select_account: 제공자에 로그인된 계정으로 바로 넘어가지 않고 매번 계정을 고르게 한다 (다른 계정으로 로그인).
 const socialProviders: NonNullable<BetterAuthOptions["socialProviders"]> = {}
 if (env.googleClientId && env.googleClientSecret) {
-  socialProviders.google = { clientId: env.googleClientId, clientSecret: env.googleClientSecret }
+  socialProviders.google = { clientId: env.googleClientId, clientSecret: env.googleClientSecret, prompt: "select_account" }
 }
 if (env.githubClientId && env.githubClientSecret) {
-  socialProviders.github = { clientId: env.githubClientId, clientSecret: env.githubClientSecret }
+  socialProviders.github = { clientId: env.githubClientId, clientSecret: env.githubClientSecret, prompt: "select_account" }
 }
 
 /** 로그인 화면이 버튼을 그릴 제공자 (설정된 것만). */
