@@ -52,7 +52,7 @@ init_env() {
 up() {
   [ -f .env.prod ] || { echo "! .env.prod 없음: make deploy-init 먼저"; exit 1; }
   check_env
-  dc --profile tools build
+  dc --profile tools build --pull
   dc up -d --wait postgres
   echo "→ Better Auth 마이그레이션"
   dc run --rm migrate
